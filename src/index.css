@@ -1,1 +1,21 @@
 @import "tailwindcss";
+
+@theme {
+  --color-primary: #222831;
+  --color-secondary: #31363f;
+  --color-accent: #76abae;
+  --color-white: #eeeeee;
+  --color-error: #e63946;
+  --color-success: #38b000;
+
+  --font-primary-font: "Noto Sans Mono", sans-serif;
+}
+
+body {
+  /* background-image: url("public/background.jpg"); */
+  background-color: #222831;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: #eeeeee;
+}
