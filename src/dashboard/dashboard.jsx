@@ -1,33 +1,25 @@
-import { useEffect, useState } from "react";
 import Task from "./tasks/task";
-import axios from "axios";
 import ENDPOINT from "../config";
+import TasksOverview from "./tasksOverview";
+import DashboardNavigator from "./dashboardNavigator";
+import { useState } from "react";
+import AddTask from "./tasks/addTask";
+import Notification from "../utilities/notification";
 
 export default function Dashboard() {
-  const [tasks, setTasks] = useState([]);
-  const [isLoadingTasks, setIsLoadingTasks] = useState(true);
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        setIsLoadingTasks(true);
-        const response = await axios.get(`${ENDPOINT}/fetch`);
-        setTasks(response.data.tasks);
-      } catch (e) {
-        console.log(e);
-      } finally {
-        setIsLoadingTasks(false);
-      }
-    };
-    fetchTasks();
-  }, []);
+  const [view, setView] = useState("overview");
+  const [isSuccess, setIsSuccess] = useState({ flag: false, message: "" });
+  const setDashboardView = (value) => {
+    setView(value);
+  };
   return (
-    <div>
-      {isLoadingTasks
-        ? null
-        : tasks.map((task, index) => {
-            console.log(task.status);
-            return <Task key={task.id ?? index} id={task.id} title={task.title} description={task.description} priority={task.priority} status={task.status} creation={task.creation} comments={task.comments} />;
-          })}
+    <div className="">
+      <DashboardNavigator setDashboardView={setDashboardView} />
+      <div className="m-10">
+        {view === "overview" ? <TasksOverview /> : null}
+        {view === "add" ? <AddTask setDashboardView={setDashboardView} onSuccess={(s) => setIsSuccess(s)} /> : null}
+      </div>
+      {isSuccess.flag ? <Notification message={isSuccess.message} type="info" /> : null}
     </div>
   );
 }
