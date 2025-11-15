@@ -6,7 +6,7 @@ import Comment from "./comment";
 import Comments from "./comments";
 import Description from "./description";
 
-export default function Task({ id, title, description, status, priority, comments, creation, onAddComment, onDelete, onDeleteTask }) {
+export default function Task({ id, title, description, status, priority, comments, creation, onAddComment, onDelete, onDeleteTask, onUpdateComment }) {
   const numComments = comments.length;
   const diffDays = getDaysDifference(creation);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -54,7 +54,7 @@ export default function Task({ id, title, description, status, priority, comment
         </div>
         <div className={`space-y-2 mx-6 overflow-hidden transition-all duration-500 ease-in-out ${isExpanded ? "max-h-full opacity-100" : "max-h-0 opacity-0"}`}>
           <Description description={description} />
-          <Comments comments={comments} id={id} onAddComment={onAddComment} onDelete={onDelete} />
+          <Comments comments={comments} id={id} onAddComment={onAddComment} onDelete={onDelete} onUpdateComment={onUpdateComment} />
           <div className="flex justify-end">
             <button className="hover:bg-secondary flex justify-center items-center p-2 rounded-full cursor-pointer" onClick={handleDelete}>
               <span className="material-symbols-outlined">delete</span>

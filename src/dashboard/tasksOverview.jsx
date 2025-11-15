@@ -36,6 +36,10 @@ export default function TasksOverview() {
     setTasks((prev) => prev.map((t) => (t.id === taskId ? { ...t, comments: t.comments.filter((_, i) => i !== index) } : t)));
   };
 
+  const handleUpdateComment = (taskId, index, newComment) => {
+    setTasks((prev) => prev.map((t) => (t.id == taskId ? { ...t, comments: t.comments.map((c, i) => (i === index ? newComment : c)) } : t)));
+  };
+
   const handleDeleteTask = (taskId) => {
     setTasks((prev) => prev.filter((task) => task.id != taskId));
   };
@@ -50,7 +54,20 @@ export default function TasksOverview() {
       ) : (
         tasks.map((task, index) => {
           return (
-            <Task key={task.id ?? index} onDeleteTask={handleDeleteTask} onAddComment={handleAddComment} onDelete={handleDeleteComment} id={task.id} title={task.title} description={task.description} priority={task.priority} status={task.status} creation={task.creation} comments={task.comments} />
+            <Task
+              key={task.id ?? index}
+              onDeleteTask={handleDeleteTask}
+              onAddComment={handleAddComment}
+              onDelete={handleDeleteComment}
+              onUpdateComment={handleUpdateComment}
+              id={task.id}
+              title={task.title}
+              description={task.description}
+              priority={task.priority}
+              status={task.status}
+              creation={task.creation}
+              comments={task.comments}
+            />
           );
         })
       )}

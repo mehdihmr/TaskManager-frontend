@@ -4,7 +4,7 @@ import axios from "axios";
 import ENDPOINT from "../../config";
 import Notification from "../../utilities/notification";
 
-export default function Comments({ comments, id, onAddComment, onDelete }) {
+export default function Comments({ comments, id, onAddComment, onDelete, onUpdateComment }) {
   const [comment, setComment] = useState("");
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -31,11 +31,11 @@ export default function Comments({ comments, id, onAddComment, onDelete }) {
     <div className="border border-secondary rounded-xl py-2 px-4">
       <h1 className="mb-2">Comments:</h1>
       {comments.length === 0 ? (
-        <p>No Comments yet</p>
+        <p className="ms-8">No Comments yet</p>
       ) : (
         <div className="flex flex-col space-y-2">
           {comments.map((comment, index) => (
-            <Comment key={index} index={index} id={id} onDelete={onDelete}>
+            <Comment key={index} index={index} id={id} onDelete={onDelete} onUpdateComment={onUpdateComment}>
               {comment}
             </Comment>
           ))}
