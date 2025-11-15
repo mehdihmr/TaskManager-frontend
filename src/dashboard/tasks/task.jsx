@@ -1,29 +1,52 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getDaysDifference } from "../../utilities/dateUtils";
 import axios from "axios";
 import ENDPOINT from "../../config";
-import Comment from "./comment";
 import Comments from "./comments";
 import Description from "./description";
+import TaskPriority from "./taskPriority";
+import TaskStatus from "./taskStatus";
 
-export default function Task({ id, title, description, status, priority, comments, creation, onAddComment, onDelete, onDeleteTask, onUpdateComment }) {
+export default function Task({ id, title, description, status, priority, comments, creation, onAddComment, onDelete, onDeleteTask, onUpdateComment, onUpdateDescription }) {
   const numComments = comments.length;
   const diffDays = getDaysDifference(creation);
   const [isExpanded, setIsExpanded] = useState(false);
-  let statusInfo;
-  switch (status) {
-    case "todo":
-      statusInfo = { name: "To Do", color: "bg-todo" };
-      break;
-    case "in_progress":
-      statusInfo = { name: "In Progress", color: "bg-inprogress" };
-      break;
-    case "done":
-      statusInfo = { name: "Done", color: "bg-success" };
-      break;
-    default:
-      statusInfo = { name: "To Do", color: "bg-todo" };
-  }
+  const [statusInfo, setStatusInfo] = useState({ name: "", color: "" });
+  const [currentStatus, setCurrentStatus] = useState(status);
+  const [priorityInfo, setPriorityInfo] = useState({ name: "", color: "" });
+  const [currentPriority, setCurrentPriority] = useState(priority);
+
+  useEffect(() => {
+    switch (currentStatus) {
+      case "todo":
+        setStatusInfo({ name: "To Do", color: "bg-todo" });
+        break;
+      case "in_progress":
+        setStatusInfo({ name: "In Progress", color: "bg-inprogress" });
+        break;
+      case "done":
+        setStatusInfo({ name: "Done", color: "bg-success" });
+        break;
+      default:
+        setStatusInfo({ name: "To Do", color: "bg-todo" });
+    }
+  }, [currentStatus]);
+
+  useEffect(() => {
+    switch (currentPriority) {
+      case "low":
+        setPriorityInfo({ name: "Low", color: "bg-[#4BE38C]" });
+        break;
+      case "mid":
+        setPriorityInfo({ name: "Medium", color: "bg-[#FFB02E]" });
+        break;
+      case "high":
+        setPriorityInfo({ name: "High", color: "bg-[#FF4D4F]" });
+        break;
+      default:
+        setPriorityInfo({ name: "Low", color: "bg-[#6EE7B7]" });
+    }
+  }, [currentPriority]);
 
   const handleDelete = async () => {
     try {
@@ -39,7 +62,7 @@ export default function Task({ id, title, description, status, priority, comment
       <div className="flex-1 flex flex-col  space-y-2">
         <div className="flex flex-row items-center justify-start space-x-4">
           <p className="text-xl">{title}</p>
-          <p className="bg-accent w-20 text-center rounded-xl text-black">{priority}</p>
+          <p className={`${priorityInfo.color} w-20 text-center rounded-xl text-black`}>{priorityInfo.name}</p>
           <p className={`${statusInfo.color} min-w-20 px-2 text-center rounded-xl text-black`}>{statusInfo.name}</p>
         </div>
         <div className="flex flex-row items-center space-x-2">
@@ -53,7 +76,23 @@ export default function Task({ id, title, description, status, priority, comment
           </div>
         </div>
         <div className={`space-y-2 mx-6 overflow-hidden transition-all duration-500 ease-in-out ${isExpanded ? "max-h-full opacity-100" : "max-h-0 opacity-0"}`}>
-          <Description description={description} />
+          <div className="flex flex-row space-x-2">
+            <TaskPriority
+              id={id}
+              priority={priority}
+              onPriorityChange={(newPriority) => {
+                setCurrentPriority(newPriority);
+              }}
+            />
+            <TaskStatus
+              id={id}
+              status={status}
+              onStatusChange={(newStatus) => {
+                setCurrentStatus(newStatus);
+              }}
+            />
+          </div>
+          <Description description={description} id={id} onUpdateDescription={onUpdateDescription} />
           <Comments comments={comments} id={id} onAddComment={onAddComment} onDelete={onDelete} onUpdateComment={onUpdateComment} />
           <div className="flex justify-end">
             <button className="hover:bg-secondary flex justify-center items-center p-2 rounded-full cursor-pointer" onClick={handleDelete}>

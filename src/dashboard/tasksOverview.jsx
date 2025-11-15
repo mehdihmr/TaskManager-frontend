@@ -44,6 +44,10 @@ export default function TasksOverview() {
     setTasks((prev) => prev.filter((task) => task.id != taskId));
   };
 
+  const handleUpdateDescription = (taskId, newDescription) => {
+    setTasks((prev) => prev.map((t) => (t.id === taskId ? { ...t, description: newDescription } : t)));
+  };
+
   return (
     <div className="space-y-4">
       <h1 className="text-4xl text-center mb-4 font-header-font">Task overview</h1>
@@ -60,6 +64,7 @@ export default function TasksOverview() {
               onAddComment={handleAddComment}
               onDelete={handleDeleteComment}
               onUpdateComment={handleUpdateComment}
+              onUpdateDescription={handleUpdateDescription}
               id={task.id}
               title={task.title}
               description={task.description}
