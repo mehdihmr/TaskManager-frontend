@@ -14,7 +14,7 @@ export default function Dashboard() {
   };
   return (
     <div className="">
-      <DashboardNavigator setDashboardView={setDashboardView} />
+      <DashboardNavigator setDashboardView={setDashboardView} actualView={view} />
       <div className="m-10">
         {view === "overview" ? <TasksOverview /> : null}
         {view === "add" ? <AddTask setDashboardView={setDashboardView} onSuccess={(s) => setIsSuccess(s)} /> : null}
