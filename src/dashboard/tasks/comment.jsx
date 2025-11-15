@@ -36,7 +36,7 @@ export default function Comment({ children, index, id, onDelete, onUpdateComment
           </button>
         </form>
       ) : (
-        <p className="flex-1">{children}</p>
+        <p className="flex-1 wrap-break-word">{children}</p>
       )}
       <button
         className="hover:bg-secondary hover:text-white text-white/50 flex justify-center items-center p-2 rounded-full cursor-pointer"
