@@ -2,8 +2,11 @@ import { useState } from "react";
 import { getDaysDifference } from "../../utilities/dateUtils";
 import axios from "axios";
 import ENDPOINT from "../../config";
+import Comment from "./comment";
+import Comments from "./comments";
+import Description from "./description";
 
-export default function Task({ id, title, description, status, priority, comments, creation, onDelete }) {
+export default function Task({ id, title, description, status, priority, comments, creation, onAddComment, onDelete, onDeleteTask }) {
   const numComments = comments.length;
   const diffDays = getDaysDifference(creation);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -25,7 +28,7 @@ export default function Task({ id, title, description, status, priority, comment
   const handleDelete = async () => {
     try {
       await axios.post(`${ENDPOINT}/delete`, { id: id });
-      onDelete();
+      onDeleteTask(id);
     } catch (e) {
       console.log(e);
     }
@@ -49,17 +52,9 @@ export default function Task({ id, title, description, status, priority, comment
             <span>{diffDays === 0 ? "Created today" : `Created ${diffDays} days ago`}</span>
           </div>
         </div>
-        <div className={`mx-6 overflow-hidden transition-all duration-500 ease-in-out ${isExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}>
-          <h1>Description:</h1>
-          <p>{description === "" ? "No description provided yet" : description}</p>
-          <h1>Comments: </h1>
-          <div className="flex flex-col divide-y divide-secondary">
-            {comments.map((comment, index) => (
-              <div className="p-2" key={index}>
-                {comment}
-              </div>
-            ))}
-          </div>
+        <div className={`space-y-2 mx-6 overflow-hidden transition-all duration-500 ease-in-out ${isExpanded ? "max-h-full opacity-100" : "max-h-0 opacity-0"}`}>
+          <Description description={description} />
+          <Comments comments={comments} id={id} onAddComment={onAddComment} onDelete={onDelete} />
           <div className="flex justify-end">
             <button className="hover:bg-secondary flex justify-center items-center p-2 rounded-full cursor-pointer" onClick={handleDelete}>
               <span className="material-symbols-outlined">delete</span>

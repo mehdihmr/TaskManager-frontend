@@ -28,6 +28,18 @@ export default function TasksOverview() {
     fetchTasks();
   }, []);
 
+  const handleAddComment = (comment, taskId) => {
+    setTasks((prev) => prev.map((t) => (t.id === taskId ? { ...t, comments: [...t.comments, comment] } : t)));
+  };
+
+  const handleDeleteComment = (taskId, index) => {
+    setTasks((prev) => prev.map((t) => (t.id === taskId ? { ...t, comments: t.comments.filter((_, i) => i !== index) } : t)));
+  };
+
+  const handleDeleteTask = (taskId) => {
+    setTasks((prev) => prev.filter((task) => task.id != taskId));
+  };
+
   return (
     <div className="space-y-4">
       <h1 className="text-4xl text-center mb-4 font-header-font">Task overview</h1>
@@ -37,7 +49,9 @@ export default function TasksOverview() {
         <div className="text-xl text-center">No tasks yet!</div>
       ) : (
         tasks.map((task, index) => {
-          return <Task key={task.id ?? index} onDelete={fetchTasks} id={task.id} title={task.title} description={task.description} priority={task.priority} status={task.status} creation={task.creation} comments={task.comments} />;
+          return (
+            <Task key={task.id ?? index} onDeleteTask={handleDeleteTask} onAddComment={handleAddComment} onDelete={handleDeleteComment} id={task.id} title={task.title} description={task.description} priority={task.priority} status={task.status} creation={task.creation} comments={task.comments} />
+          );
         })
       )}
       {isError && <Notification message="Error fetching the tasks" type="error" />}

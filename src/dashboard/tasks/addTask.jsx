@@ -55,7 +55,7 @@ export default function AddTask({ setDashboardView, onSuccess }) {
           </button>
         </div>
       </form>
-      {isError ? <Notification message="Error adding task!" type="error" /> : null}
+      {isError && <Notification message="Error adding task!" type="error" />}
     </div>
   );
 }
