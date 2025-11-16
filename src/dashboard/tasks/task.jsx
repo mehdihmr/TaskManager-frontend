@@ -7,7 +7,7 @@ import Description from "./description";
 import TaskPriority from "./taskPriority";
 import TaskStatus from "./taskStatus";
 
-export default function Task({ id, title, description, status, priority, comments, creation, onAddComment, onDelete, onDeleteTask, onUpdateComment, onUpdateDescription }) {
+export default function Task({ id, title, description, status, priority, comments, creation, onAddComment, onDelete, onDeleteTask, onUpdateComment, onUpdateDescription, onUpdateTitle }) {
   const numComments = comments.length;
   const diffDays = getDaysDifference(creation);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -15,6 +15,8 @@ export default function Task({ id, title, description, status, priority, comment
   const [currentStatus, setCurrentStatus] = useState(status);
   const [priorityInfo, setPriorityInfo] = useState({ name: "", color: "" });
   const [currentPriority, setCurrentPriority] = useState(priority);
+  const [isEditActive, setIsEditActive] = useState(false);
+  const [newTitle, setNewTitle] = useState(title);
 
   useEffect(() => {
     switch (currentStatus) {
@@ -57,15 +59,42 @@ export default function Task({ id, title, description, status, priority, comment
     }
   };
 
+  const handleUpdateTitle = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post(`${ENDPOINT}/update`, { id: id, title: newTitle });
+      onUpdateTitle(id, newTitle);
+      setIsEditActive(false);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <div className="flex flex-row items-start rounded-xl py-4 px-8 border-2 border-secondary">
       <div className="flex-1 flex flex-col  space-y-2">
-        <div className="flex flex-row items-center justify-start space-x-4">
-          <p className="text-xl">{title}</p>
-          <p className={`${priorityInfo.color} w-20 text-center rounded-xl text-black`}>{priorityInfo.name}</p>
-          <p className={`${statusInfo.color} min-w-20 px-2 text-center rounded-xl text-black`}>{statusInfo.name}</p>
+        <div className="flex flex-row items-center justify-between">
+          {isEditActive ? (
+            <form onSubmit={handleUpdateTitle} className="w-full me-4">
+              <input type="text" className="text-xl bg-secondary w-full px-2 rounded-xl py-1" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} maxLength={60} />
+              <button type="submit"></button>
+            </form>
+          ) : (
+            <p
+              className="text-xl cursor-text px-2 py-1"
+              onClick={() => {
+                setIsEditActive(!isEditActive);
+              }}
+            >
+              {title}
+            </p>
+          )}
+          <div className="flex flex-row space-x-4">
+            <p className={`${priorityInfo.color} w-20 text-center rounded-xl text-black`}>{priorityInfo.name}</p>
+            <p className={`${statusInfo.color} min-w-20 px-2 text-center rounded-xl text-black`}>{statusInfo.name}</p>
+          </div>
         </div>
-        <div className="flex flex-row items-center space-x-2">
+        <div className="flex flex-row items-center space-x-2 ms-2">
           <div className="flex flex-row items-center space-x-2 bg-secondary px-2 rounded-xl">
             <span className="material-symbols-outlined text-[15px]!">mode_comment</span>
             <span>{numComments}</span>
@@ -75,7 +104,7 @@ export default function Task({ id, title, description, status, priority, comment
             <span>{diffDays === 0 ? "Created today" : `Created ${diffDays} day(s) ago`}</span>
           </div>
         </div>
-        <div className={`space-y-2 mx-6 overflow-hidden transition-all duration-500 ease-in-out ${isExpanded ? "max-h-full opacity-100" : "max-h-0 opacity-0"}`}>
+        <div className={`space-y-2 ms-6 me-2 overflow-hidden transition-all duration-500 ease-in-out ${isExpanded ? "max-h-full opacity-100" : "max-h-0 opacity-0"}`}>
           <div className="flex flex-row space-x-2">
             <TaskPriority
               id={id}
@@ -101,7 +130,7 @@ export default function Task({ id, title, description, status, priority, comment
           </div>
         </div>
       </div>
-      <button className="hover:bg-secondary flex items-center rounded-full p-2 cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
+      <button className="hover:bg-secondary flex items-center rounded-full p-2 cursor-pointer ms-4" onClick={() => setIsExpanded(!isExpanded)}>
         <span className={`material-symbols-outlined transition-all duration-300 ease-in-out ${isExpanded ? "rotate-180" : "rotate-0"}`}>keyboard_arrow_down</span>
       </button>
     </div>

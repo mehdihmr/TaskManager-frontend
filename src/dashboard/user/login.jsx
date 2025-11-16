@@ -67,7 +67,7 @@ export default function Login({ onSetView, onLoggedIn }) {
     <div className="flex-1 me-5 my-2">
       <h1 className="text-4xl text-center mb-8 font-header-font">Log in</h1>
       <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
-        <input type="text" placeholder="Username" name="username" className={`w-full py-3 px-4 bg-secondary border ${isUsernameEmpty ? "border-error" : "border-transparent focus:border-accent"} outline-hidden rounded-xl`} value={loginInfo.username} onChange={handleChange} />
+        <input type="text" placeholder="Username / Email" name="username" className={`w-full py-3 px-4 bg-secondary border ${isUsernameEmpty ? "border-error" : "border-transparent focus:border-accent"} outline-hidden rounded-xl`} value={loginInfo.username} onChange={handleChange} />
         <input type="password" placeholder="Password" name="password" className={`w-full py-3 px-4 bg-secondary border outline-hidden rounded-xl ${isPasswordEmpty ? "border-error" : "border-transparent focus:border-accent"}`} value={loginInfo.password} onChange={handleChange} />
 
         <div className="flex flex-row justify-between items-center">
@@ -96,7 +96,7 @@ export default function Login({ onSetView, onLoggedIn }) {
       </p>
       <div className="flex flex-row items-center space-x-2 my-4">
         <span className="h-0.5 flex-1 bg-white/40"></span>
-        <span className="text-xs text-white/40">Or register with</span>
+        <span className="text-xs text-white/40">Or log in with</span>
         <span className="h-0.5 flex-1 bg-white/40"></span>
       </div>
       <div className="flex flex-row mx-4 space-x-4">
