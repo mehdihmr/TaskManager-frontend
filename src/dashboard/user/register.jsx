@@ -47,7 +47,6 @@ export default function Register({ onSetView }) {
     setIsSuccess(false);
     setIsError(false);
     let passwordEmpty = false;
-    console.log("Registration Info:", registrationInfo);
     if (registrationInfo.username.trim() === "" || registrationInfo.email.trim() === "" || registrationInfo.password !== registrationInfo.confirmPassword || !registrationInfo.acceptedTerms) {
       if (registrationInfo.username.trim() === "") {
         setIsUserNameEmpty(true);

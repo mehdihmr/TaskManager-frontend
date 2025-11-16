@@ -1,24 +1,75 @@
 import { useState } from "react";
+import Loader from "../../utilities/loader";
+import axios from "axios";
+import ENDPOINT from "../../config";
+import Notification from "../../utilities/notification";
 
-export default function Login({ onSetView }) {
+export default function Login({ onSetView, onLoggedIn }) {
   const [loginInfo, setLoginInfo] = useState({
     username: "",
     password: "",
-    acceptedTerms: false,
+    rememberMe: false,
   });
   const [isLoading, setIsLoading] = useState(false);
-  const handleChange = (e) => {};
+  const [isUsernameEmpty, setIsUsernameEmpty] = useState(false);
+  const [isPasswordEmpty, setIsPasswordEmpty] = useState(false);
+  const [isBadCredentials, setIsBadCredentials] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    if (name === "username") {
+      setIsUsernameEmpty(false);
+    }
+    if (name === "password") {
+      setIsPasswordEmpty(false);
+    }
+    setLoginInfo((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsBadCredentials(false);
+    setIsSuccess(false);
+    if (loginInfo.username.trim() === "" || loginInfo.password.trim() === "") {
+      if (loginInfo.username.trim() === "") {
+        setIsUsernameEmpty(true);
+      }
+      if (loginInfo.password.trim() === "") {
+        setIsPasswordEmpty(true);
+      }
+      return;
+    }
+    setIsLoading(true);
+    console.log("Login Info:", loginInfo);
+    try {
+      let response = await axios.post(`${ENDPOINT}/login`, loginInfo);
+      console.log("Response:", response.data);
+      setIsSuccess(true);
+      onLoggedIn("Successfully logged in");
+    } catch (e) {
+      console.log(e.response.status);
+      if (e.response && e.response.status === 401) {
+        setIsBadCredentials(true);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <div className="flex-1 me-5 my-2">
       <h1 className="text-4xl text-center mb-8 font-header-font">Log in</h1>
-      <form className="flex flex-col space-y-4">
-        <input type="text" placeholder="Username" name="username" className="w-full py-3 px-4 bg-secondary border border-transparent focus:border focus:border-accent outline-hidden rounded-xl" onChange={handleChange} />
-        <input type="password" placeholder="Password" name="password" className="w-full py-3 px-4 bg-secondary border outline-hidden rounded-xl border-transparent focus:border-accent" onChange={handleChange} />
+      <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
+        <input type="text" placeholder="Username" name="username" className={`w-full py-3 px-4 bg-secondary border ${isUsernameEmpty ? "border-error" : "border-transparent focus:border-accent"} outline-hidden rounded-xl`} value={loginInfo.username} onChange={handleChange} />
+        <input type="password" placeholder="Password" name="password" className={`w-full py-3 px-4 bg-secondary border outline-hidden rounded-xl ${isPasswordEmpty ? "border-error" : "border-transparent focus:border-accent"}`} value={loginInfo.password} onChange={handleChange} />
 
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row space-x-2 ms-3">
             <label className="relative flex items-center cursor-pointer">
-              <input type="checkbox" className="peer sr-only" checked="" onChange={handleChange} name="acceptedTerms" />
+              <input type="checkbox" className="peer sr-only" checked={loginInfo.rememberMe} onChange={handleChange} name="rememberMe" />
               <div className={`w-4 h-4 rounded border peer-checked:bg-accent peer-checked:border-accent transition border-accent`}></div>
             </label>
             <label htmlFor="terms">Remember me?</label>
@@ -68,6 +119,8 @@ export default function Login({ onSetView }) {
           <span>Apple</span>
         </button>
       </div>
+      {isBadCredentials && <p className="border-2 font-bold rounded-xl border-error text-error text-center mt-4 py-4 mx-4 bg-red-50">Invalid credentials. Please try again.</p>}
+      {isSuccess && <Notification message="Logged in successfully!" type="info" />}
     </div>
   );
 }

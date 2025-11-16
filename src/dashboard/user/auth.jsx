@@ -3,7 +3,7 @@ import Register from "./register";
 import { useState } from "react";
 import background from "../../assets/background3.png";
 
-export default function Auth() {
+export default function Auth({ onLoggedIn }) {
   const [isLoginView, setIsLoginView] = useState(true);
   return (
     <div className="flex flex-row justify-center mx-10 relative">
@@ -11,6 +11,7 @@ export default function Auth() {
         onSetView={(view) => {
           setIsLoginView(view);
         }}
+        onLoggedIn={onLoggedIn}
       />
       <Register
         onSetView={(view) => {

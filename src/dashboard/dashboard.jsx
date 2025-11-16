@@ -17,7 +17,14 @@ export default function Dashboard() {
       <div className="m-10">
         {view === "overview" && <TasksOverview />}
         {view === "add" && <AddTask setDashboardView={setDashboardView} onSuccess={(s) => setIsSuccess(s)} />}
-        {view === "auth" && <Auth />}
+        {view === "auth" && (
+          <Auth
+            onLoggedIn={(message) => {
+              setDashboardView("overview");
+              setIsSuccess({ flag: true, message });
+            }}
+          />
+        )}
       </div>
       {isSuccess.flag ? <Notification message={isSuccess.message} type="info" /> : null}
     </div>
