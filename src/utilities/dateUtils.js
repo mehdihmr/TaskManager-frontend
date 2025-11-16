@@ -5,11 +5,12 @@
  */
 export function getDaysDifference(dateStr) {
   const targetDate = new Date(dateStr);
+  targetDate.setHours(0, 0, 0, 0); // normalize to midnight
 
   const today = new Date();
   today.setHours(0, 0, 0, 0); // normalize to midnight
 
-  const diffMs = targetDate - today;
+  const diffMs = today - targetDate;
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
   return diffDays;
