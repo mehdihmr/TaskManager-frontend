@@ -72,7 +72,7 @@ export default function Task({ id, title, description, status, priority, comment
           </div>
           <div className="flex flex-row items-center space-x-2 bg-secondary px-2 rounded-xl">
             <span className="material-symbols-outlined text-[15px]!">history_2</span>
-            <span>{diffDays === 0 ? "Created today" : `Created ${diffDays} days ago`}</span>
+            <span>{diffDays === 0 ? "Created today" : `Created ${diffDays} day(s) ago`}</span>
           </div>
         </div>
         <div className={`space-y-2 mx-6 overflow-hidden transition-all duration-500 ease-in-out ${isExpanded ? "max-h-full opacity-100" : "max-h-0 opacity-0"}`}>
