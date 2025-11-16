@@ -15,6 +15,7 @@ export default function Login({ onSetView, onLoggedIn }) {
   const [isPasswordEmpty, setIsPasswordEmpty] = useState(false);
   const [isBadCredentials, setIsBadCredentials] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -34,6 +35,7 @@ export default function Login({ onSetView, onLoggedIn }) {
     e.preventDefault();
     setIsBadCredentials(false);
     setIsSuccess(false);
+    setIsError(false);
     if (loginInfo.username.trim() === "" || loginInfo.password.trim() === "") {
       if (loginInfo.username.trim() === "") {
         setIsUsernameEmpty(true);
@@ -51,9 +53,11 @@ export default function Login({ onSetView, onLoggedIn }) {
       setIsSuccess(true);
       onLoggedIn("Successfully logged in");
     } catch (e) {
-      console.log(e.response.status);
+      // console.log(e.response.status);
       if (e.response && e.response.status === 401) {
         setIsBadCredentials(true);
+      } else {
+        setIsError(true);
       }
     } finally {
       setIsLoading(false);
@@ -121,6 +125,7 @@ export default function Login({ onSetView, onLoggedIn }) {
       </div>
       {isBadCredentials && <p className="border-2 font-bold rounded-xl border-error text-error text-center mt-4 py-4 mx-4 bg-red-50">Invalid credentials. Please try again.</p>}
       {isSuccess && <Notification message="Logged in successfully!" type="info" />}
+      {isError && <Notification message="An error occurred. Please try again." type="error" />}
     </div>
   );
 }
