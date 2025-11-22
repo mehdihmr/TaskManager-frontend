@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import axios from "axios";
-import ENDPOINT from "../../config";
+import api from "../../api/axios";
 
 export default function Description({ description, id, onUpdateDescription }) {
   const [isEditActive, setIsEditActive] = useState(false);
@@ -10,7 +9,7 @@ export default function Description({ description, id, onUpdateDescription }) {
   const handleUpdateComment = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${ENDPOINT}/update`, { id: id, description: newDescription });
+      await api.post("/task/update", { id: id, description: newDescription });
       onUpdateDescription(id, newDescription);
       setIsEditActive(false);
     } catch (e) {
@@ -59,7 +58,9 @@ export default function Description({ description, id, onUpdateDescription }) {
           </button>
         </form>
       ) : (
-        <p className="ms-8 whitespace-pre-wrap">{description === "" ? "No description provided yet" : description}</p>
+        <p className="ms-8 whitespace-pre-wrap" onClick={() => setIsEditActive(true)}>
+          {description === "" ? "No description provided yet" : description}
+        </p>
       )}
     </div>
   );

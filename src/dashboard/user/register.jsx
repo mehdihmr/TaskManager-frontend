@@ -1,8 +1,7 @@
-import axios from "axios";
 import { useState } from "react";
-import ENDPOINT from "../../config";
 import Loader from "../../utilities/loader";
 import Notification from "../../utilities/notification";
+import api from "../../api/axios";
 
 export default function Register({ onSetView }) {
   const [isPasswordVisible, setIsPasswordVisible] = useState({ password: false, confirmPassword: false });
@@ -73,7 +72,7 @@ export default function Register({ onSetView }) {
 
     try {
       setIsLoading(true);
-      let response = await axios.post(`${ENDPOINT}/register`, registrationInfo);
+      let response = await api.post("/user/register", registrationInfo);
       console.log("Registration successful:", response.data);
       setIsSuccess(true);
       onSetView(true);

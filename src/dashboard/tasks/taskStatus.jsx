@@ -1,11 +1,10 @@
-import axios from "axios";
-import ENDPOINT from "../../config";
+import api from "../../api/axios";
 
 export default function TaskStatus({ id, status, onStatusChange }) {
   const handleStatusChange = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${ENDPOINT}/update`, { id: id, status: e.target.value });
+      await api.post("/task/update", { id: id, status: e.target.value });
       onStatusChange(e.target.value);
     } catch (e) {
       console.log(e);

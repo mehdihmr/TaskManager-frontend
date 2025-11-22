@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import ENDPOINT from "../config";
 import Task from "./tasks/task";
 import Loader from "../utilities/loader";
 import Notification from "../utilities/notification";
+import api from "../api/axios";
 
 export default function TasksOverview() {
   const [tasks, setTasks] = useState([]);
@@ -14,7 +13,7 @@ export default function TasksOverview() {
     try {
       setIsError(false);
       setIsLoadingTasks(true);
-      const response = await axios.get(`${ENDPOINT}/fetch`);
+      const response = await api.get("/task/fetch");
       setTasks(response.data.tasks);
     } catch (e) {
       setIsError(true);

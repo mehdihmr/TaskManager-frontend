@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { getDaysDifference } from "../../utilities/dateUtils";
-import axios from "axios";
-import ENDPOINT from "../../config";
 import Comments from "./comments";
 import Description from "./description";
 import TaskPriority from "./taskPriority";
 import TaskStatus from "./taskStatus";
+import api from "../../api/axios";
 
 export default function Task({ id, title, description, status, priority, comments, creation, onAddComment, onDelete, onDeleteTask, onUpdateComment, onUpdateDescription, onUpdateTitle }) {
   const numComments = comments.length;
@@ -52,7 +51,7 @@ export default function Task({ id, title, description, status, priority, comment
 
   const handleDelete = async () => {
     try {
-      await axios.post(`${ENDPOINT}/delete`, { id: id });
+      await api.post("/task/delete", { id: id });
       onDeleteTask(id);
     } catch (e) {
       console.log(e);
@@ -62,7 +61,7 @@ export default function Task({ id, title, description, status, priority, comment
   const handleUpdateTitle = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${ENDPOINT}/update`, { id: id, title: newTitle });
+      await api.post("/task/update", { id: id, title: newTitle });
       onUpdateTitle(id, newTitle);
       setIsEditActive(false);
     } catch (e) {
@@ -76,12 +75,12 @@ export default function Task({ id, title, description, status, priority, comment
         <div className="flex flex-row items-center justify-between">
           {isEditActive ? (
             <form onSubmit={handleUpdateTitle} className="w-full me-4">
-              <input type="text" className="text-xl bg-secondary w-full px-2 rounded-xl py-1" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} maxLength={60} />
-              <button type="submit"></button>
+              <input type="text" className="text-xl bg-secondary px-2 w-full rounded-xl py-1" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} maxLength={60} />
+              <button type="submit" className="invisible"></button>
             </form>
           ) : (
             <p
-              className="text-xl cursor-text px-2 py-1"
+              className="text-xl cursor-text px-2 py-1 w-full"
               onClick={() => {
                 setIsEditActive(!isEditActive);
               }}
@@ -90,8 +89,8 @@ export default function Task({ id, title, description, status, priority, comment
             </p>
           )}
           <div className="flex flex-row space-x-4">
-            <p className={`${priorityInfo.color} w-20 text-center rounded-xl text-black`}>{priorityInfo.name}</p>
-            <p className={`${statusInfo.color} min-w-20 px-2 text-center rounded-xl text-black`}>{statusInfo.name}</p>
+            <p className={`${priorityInfo.color} min-w-32 text-center rounded-xl text-black`}>{priorityInfo.name}</p>
+            <p className={`${statusInfo.color} min-w-32 px-2 text-center rounded-xl text-black`}>{statusInfo.name}</p>
           </div>
         </div>
         <div className="flex flex-row items-center space-x-2 ms-2">

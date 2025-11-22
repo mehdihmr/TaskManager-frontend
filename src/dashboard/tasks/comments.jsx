@@ -1,8 +1,7 @@
 import { useState } from "react";
 import Comment from "./comment";
-import axios from "axios";
-import ENDPOINT from "../../config";
 import Notification from "../../utilities/notification";
+import api from "../../api/axios";
 
 export default function Comments({ comments, id, onAddComment, onDelete, onUpdateComment }) {
   const [comment, setComment] = useState("");
@@ -17,7 +16,7 @@ export default function Comments({ comments, id, onAddComment, onDelete, onUpdat
     try {
       setIsError(false);
       setIsLoading(true);
-      await axios.post(`${ENDPOINT}/update`, { id: id, comment: comment });
+      await api.post("/task/update", { id: id, comment: comment });
       onAddComment(comment, id);
       setComment("");
     } catch (e) {

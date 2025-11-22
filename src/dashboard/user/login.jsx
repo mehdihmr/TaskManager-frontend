@@ -1,10 +1,10 @@
 import { useState } from "react";
 import Loader from "../../utilities/loader";
-import axios from "axios";
-import ENDPOINT from "../../config";
 import Notification from "../../utilities/notification";
+import { useNavigate } from "react-router-dom";
+import api from "../../api/axios";
 
-export default function Login({ onSetView, onLoggedIn }) {
+export default function Login({ onSetView }) {
   const [loginInfo, setLoginInfo] = useState({
     username: "",
     password: "",
@@ -16,6 +16,7 @@ export default function Login({ onSetView, onLoggedIn }) {
   const [isBadCredentials, setIsBadCredentials] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -48,10 +49,11 @@ export default function Login({ onSetView, onLoggedIn }) {
     setIsLoading(true);
     console.log("Login Info:", loginInfo);
     try {
-      let response = await axios.post(`${ENDPOINT}/login`, loginInfo);
+      let response = await api.post("/user/login", loginInfo);
       console.log("Response:", response.data);
       setIsSuccess(true);
-      onLoggedIn("Successfully logged in");
+      localStorage.setItem("token", response.data.access_token);
+      navigate("/dashboard");
     } catch (e) {
       // console.log(e.response.status);
       if (e.response && e.response.status === 401) {
@@ -79,7 +81,9 @@ export default function Login({ onSetView, onLoggedIn }) {
             <label htmlFor="terms">Remember me?</label>
           </div>
           <div>
-            <button className="cursor-pointer underline">Forgot password?</button>
+            <button type="button" className="cursor-pointer underline">
+              Forgot password?
+            </button>
           </div>
         </div>
         <button type="submit" className={`bg-accent rounded-xl py-3  hover:bg-accent/50 ${isLoading ? "cursor-not-allowed bg-accent/50" : "cursor-pointer"}`} disabled={isLoading}>

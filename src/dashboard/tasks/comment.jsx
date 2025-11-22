@@ -1,6 +1,5 @@
-import axios from "axios";
-import ENDPOINT from "../../config";
 import { useState } from "react";
+import api from "../../api/axios";
 
 export default function Comment({ children, index, id, onDelete, onUpdateComment }) {
   const [isEditActive, setIsEditActive] = useState(false);
@@ -9,7 +8,7 @@ export default function Comment({ children, index, id, onDelete, onUpdateComment
   const handleDelete = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${ENDPOINT}/comment/delete`, { id: id, comment: children });
+      await api.post("/task/comment/delete", { id: id, comment: children });
       onDelete(id, index);
     } catch (e) {
       console.log(e);
@@ -19,7 +18,7 @@ export default function Comment({ children, index, id, onDelete, onUpdateComment
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${ENDPOINT}/comment/update`, { id: id, comment: children, newComment: newComment });
+      await api.post("/task/comment/update", { id: id, comment: children, newComment: newComment });
       onUpdateComment(id, index, newComment);
       setIsEditActive(false);
     } catch (e) {

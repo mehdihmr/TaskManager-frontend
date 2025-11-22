@@ -1,11 +1,10 @@
-import axios from "axios";
-import ENDPOINT from "../../config";
+import api from "../../api/axios";
 
 export default function TaskPriority({ id, priority, onPriorityChange }) {
   const handlePriorityChange = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${ENDPOINT}/update`, { id: id, priority: e.target.value });
+      await api.post("/task/update", { id: id, priority: e.target.value });
       onPriorityChange(e.target.value);
     } catch (e) {
       console.log(e);

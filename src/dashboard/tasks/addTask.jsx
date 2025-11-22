@@ -1,8 +1,7 @@
-import axios from "axios";
 import { useState } from "react";
-import ENDPOINT from "../../config";
 import Loader from "../../utilities/loader";
 import Notification from "../../utilities/notification";
+import api from "../../api/axios";
 
 export default function AddTask({ setDashboardView, onSuccess }) {
   const [taskInfo, setTaskInfo] = useState({
@@ -26,7 +25,7 @@ export default function AddTask({ setDashboardView, onSuccess }) {
       setIsError(false);
       onSuccess({ flag: false, message: "" });
       setIsLoading(true);
-      await axios.post(`${ENDPOINT}/add`, taskInfo);
+      await api.post("/task/add", taskInfo);
       onSuccess({ flag: true, message: "Task added!" });
       setDashboardView("overview");
     } catch (e) {
