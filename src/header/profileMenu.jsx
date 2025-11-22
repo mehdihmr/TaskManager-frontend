@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-export default function ProfileMenu({ user }) {
+export default function ProfileMenu({ user, setView }) {
   const navigate = useNavigate();
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -17,7 +17,12 @@ export default function ProfileMenu({ user }) {
       </div>
       <hr className="text-white/50" />
       <div className="flex flex-col space-y-2 ">
-        <button className="flex flex-row items-center space-x-4 p-2 cursor-pointer hover:bg-white/10 rounded-xl">
+        <button
+          className="flex flex-row items-center space-x-4 p-2 cursor-pointer hover:bg-white/10 rounded-xl"
+          onClick={() => {
+            setView("profile");
+          }}
+        >
           <span className="material-symbols-outlined scale-125">person</span>
           <p>Profile</p>
         </button>

@@ -1,13 +1,20 @@
 import { useState } from "react";
 import ProfileMenu from "./profileMenu";
 
-export default function Header({ user }) {
+export default function Header({ user, setView }) {
   const [isNotificationSelected, setIsNotificationSelected] = useState(false);
   const [isProfileSelected, setIsProfileSelected] = useState(false);
   return (
     <div className="flex flex-row items-center justify-between py-3 px-10">
       <div>
-        <h1 className="font-header-font text-xl">Taskio</h1>
+        <h1
+          className="font-header-font text-xl cursor-pointer"
+          onClick={() => {
+            setView("dashboard");
+          }}
+        >
+          Taskio
+        </h1>
       </div>
       <div className="flex flex-row">
         <span className="material-symbols-outlined bg-secondary py-1 ps-4 pe-3 rounded-s-xl">search</span>
@@ -37,7 +44,7 @@ export default function Header({ user }) {
             <span className="material-symbols-outlined scale-125">account_circle</span>
           </button>
           <div className={`absolute top-full right-0 bg-secondary w-60 z-50 rounded-xl border border-white/50 ${isProfileSelected ? "opacity-100" : "hidden"}`}>
-            <ProfileMenu user={user} />
+            <ProfileMenu user={user} setView={setView} />
           </div>
         </div>
       </div>
